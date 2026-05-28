@@ -1,0 +1,61 @@
+//3A. Design and implement C/C++ Program to solve All-Pairs Shortest Paths problem using Floyd’s algorithm.
+
+#include<stdio.h>      // Standard input/output library
+//#include<conio.h>    // For getch() function (Turbo C/console pause)
+
+#define INF 999        // Representing infinity (no direct edge)
+
+// Function to return minimum of two numbers
+int min(int a,int b)
+{
+    return (a<b) ? a : b;  // If a < b, return a; else return b
+}
+
+// Floyd-Warshall algorithm function
+void floyd(int p[][10], int n)
+{
+    int i,j,k;  // Loop variables
+
+    // Consider each vertex k as intermediate vertex
+    for(k=1; k<=n; k++)
+
+        // For all pairs of vertices (i, j)
+        for(i=1; i<=n; i++)
+
+            for(j=1; j<=n; j++)
+
+                // Update shortest distance if path via k is shorter
+                p[i][j] = min(p[i][j], p[i][k] + p[k][j]);
+}
+
+// Main function
+void main()
+{
+    int a[10][10], n, i, j;  // Adjacency matrix and variables
+
+    printf("\nEnter the n value:");
+    scanf("%d",&n);           // Read number of vertices
+
+    printf("\nEnter the graph data:\n");
+
+    // Input adjacency matrix
+    for(i=1; i<=n; i++)
+        for(j=1; j<=n; j++)
+            scanf("%d",&a[i][j]);
+
+    // Call Floyd-Warshall to compute shortest paths
+    floyd(a,n);
+
+    printf("\nShortest path matrix\n");
+
+    // Print the shortest distance matrix
+    for(i=1; i<=n; i++)
+    {
+        for(j=1; j<=n; j++)
+            printf("%d ",a[i][j]);
+
+        printf("\n");
+    }
+
+    //getch();  // Wait for key press before closing (Turbo C)
+}
