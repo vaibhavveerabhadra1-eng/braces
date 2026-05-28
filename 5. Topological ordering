@@ -1,0 +1,66 @@
+//5. Design and implement C/C++ Program to obtain the Topological ordering of vertices in a given digraph. 
+
+#include<stdio.h> 
+//#include<conio.h> 
+ 
+int temp[10], k = 0;   // temp[] stores topological order, k = index counter 
+ 
+// Function to perform topological sort 
+void sort(int a[][10], int id[], int n) 
+{ 
+    int i, j; 
+ 
+    // Loop until all vertices with in-degree 0 are processed 
+    for(i = 1; i <= n; i++) 
+    { 
+        if(id[i] == 0)      // Vertex with in-degree 0 
+        { 
+            id[i] = -1;      // Mark vertex as processed 
+            temp[++k] = i;   // Add vertex to topological order 
+ 
+            // Reduce in-degree of adjacent vertices 
+            for(j = 1; j <= n; j++) 
+            { 
+                if(a[i][j] == 1 && id[j] != -1)  // Edge exists and vertex not processed 
+                    id[j]--;     // Decrease in-degree 
+            } 
+ 
+            i = 0;   // Reset loop to start checking from first vertex again 
+        } 
+    } 
+} 
+ 
+void main() 
+{ 
+    int a[10][10], id[10], n, i, j; 
+ 
+    printf("\nEnter the n value:"); 
+    scanf("%d",&n);       // Number of vertices 
+ 
+    for(i = 1; i <= n; i++) 
+        id[i] = 0;        // Initialize in-degree array 
+ 
+    printf("\nEnter the graph data:\n"); 
+    // Input adjacency matrix and compute initial in-degree 
+    for(i = 1; i <= n; i++) 
+        for(j = 1; j <= n; j++) 
+        { 
+            scanf("%d",&a[i][j]);   // Edge from i → j 
+ 
+            if(a[i][j] == 1)        // If edge exists 
+                id[j]++;            // Increment in-degree of vertex j 
+        } 
+ 
+    sort(a, id, n);  // Perform topological sort 
+ 
+    if(k != n)        // If all vertices are not processed 
+        printf("\nTopological ordering not possible");  // Cycle exists 
+    else 
+    { 
+        printf("\nTopological ordering is:"); 
+        for(i = 1; i <= k; i++) 
+            printf("%d ", temp[i]);  // Print topological order 
+    } 
+ 
+    //getch();  // Wait for key press before exiting (Turbo C) 
+} 
