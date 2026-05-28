@@ -1,0 +1,58 @@
+// 6. Design and implement C/C++ Program to solve 0/1 Knapsack problem using Dynamic Programming method.
+
+#include<stdio.h>
+
+int w[10], p[10], n;       
+// w[] = weights, p[] = profits, n = number of items
+
+// Function to return maximum of two numbers
+int max(int a,int b)
+{
+    return a>b?a:b;
+}
+
+// Recursive function to solve 0/1 Knapsack
+// i = current item index, m = remaining capacity
+int knap(int i,int m)
+{
+    // Base case: last item
+    if(i==n)
+        return w[i] > m ? 0 : p[i];
+        // If last item fits, return its profit; else 0
+
+    // If current item exceeds capacity, skip it
+    if(w[i] > m)
+        return knap(i+1, m);
+
+    // Return maximum of:
+    // 1. Excluding current item
+    // 2. Including current item (add its profit, reduce capacity)
+    return max(knap(i+1, m), knap(i+1, m-w[i]) + p[i]);
+}
+
+int main()
+{
+    int m, i, max_profit;
+
+    printf("\nEnter the no. of objects:");
+    scanf("%d",&n);
+    // Read number of items
+
+    printf("\nEnter the knapsack capacity:");
+    scanf("%d",&m);
+    // Read knapsack capacity
+
+    printf("\nEnter profit followed by weight:\n");
+
+    // Read profit and weight for each item
+    for(i=1; i<=n; i++)
+        scanf("%d %d",&p[i],&w[i]);
+
+    max_profit = knap(1, m);
+    // Call recursive knapsack function
+
+    printf("\nMax profit=%d", max_profit);
+    // Print maximum profit
+
+    return 0;
+}
