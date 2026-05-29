@@ -1,0 +1,118 @@
+1. Design and implement C/C++ Program to find Minimum Cost Spanning Tree of a given connected 
+undirected graph using Kruskal’s algorithm. 
+
+#include <stdio.h>          // Standard input/output library
+
+#define INF 999             // Value representing no edge (infinity)
+#define MAX 100             // Maximum number of vertices
+
+int p[MAX];                 // Parent array for Union-Find
+int c[MAX][MAX];            // Cost adjacency matrix
+int t[MAX][2];              // To store edges of MST
+
+// Function to find root (representative) of a vertex
+int find(int v)
+{
+    // Traverse until parent is 0 (root node)
+    while (p[v] != 0)
+        v = p[v];           // Move to parent
+
+    return v;               // Return root of the set
+}
+
+// Function to perform union of two sets
+void union1(int i, int j)
+{
+    p[j] = i;               // Make root j point to root i
+}
+
+// Function to implement Kruskal's Algorithm
+void kruskal(int n)
+{
+    int i, j, k;            // Loop variables
+    int u, v;               // Roots of vertices
+    int min;                // Minimum edge weight
+    int res1 = 0, res2 = 0; // Store selected edge vertices
+    int sum = 0;            // Total cost of MST
+
+    // MST requires exactly (n-1) edges
+    for (k = 1; k < n; k++)
+    {
+        min = INF;          // Initialize minimum to infinity
+
+        // Search entire matrix for smallest edge
+        for (i = 1; i <= n; i++)
+        {
+            for (j = 1; j <= n; j++)
+            {
+                // Ignore self-loops and check smaller edge
+                if (i != j && c[i][j] < min)
+                {
+                    u = find(i);   // Find root of vertex i
+                    v = find(j);   // Find root of vertex j
+
+                    // If vertices are in different sets (no cycle)
+                    if (u != v)
+                    {
+                        min = c[i][j];  // Update minimum weight
+                        res1 = i;       // Store vertex i
+                        res2 = j;       // Store vertex j
+                    }
+                }
+            }
+        }
+
+        // Perform union of selected edge sets
+        union1(find(res1), find(res2));
+
+        t[k][0] = res1;     // Store first vertex of MST edge
+        t[k][1] = res2;     // Store second vertex of MST edge
+
+        sum += min;         // Add edge weight to total cost
+
+        // Set selected edge cost to INF to avoid re-selection
+        c[res1][res2] = c[res2][res1] = INF;
+    }
+
+    // Print total cost of MST
+    printf("\nCost of spanning tree = %d", sum);
+
+    // Print edges included in MST
+    printf("\nEdges of spanning tree are:\n");
+
+    for (i = 1; i < n; i++)
+        printf("%d -> %d\n", t[i][0], t[i][1]);
+}
+
+// Main function
+int main()
+{
+    int i, j, n;            // Variables for loops and vertex count
+
+    printf("\nEnter number of vertices: ");
+    scanf("%d", &n);        // Read number of vertices
+
+    // Initialize parent array to 0 (each vertex separate set)
+    for (i = 1; i <= n; i++)
+        p[i] = 0;
+
+    printf("\nEnter adjacency matrix (enter 999 for no edge):\n");
+
+    // Read adjacency matrix
+    for (i = 1; i <= n; i++)
+    {
+        for (j = 1; j <= n; j++)
+        {
+            scanf("%d", &c[i][j]);  // Read cost
+
+            // Replace 0 (no edge) with INF value
+            if (c[i][j] == 0)
+                c[i][j] = INF;
+        }
+    }
+
+    // Call Kruskal function
+    kruskal(n);
+
+    return 0;
+}
