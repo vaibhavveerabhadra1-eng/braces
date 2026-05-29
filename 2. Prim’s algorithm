@@ -1,0 +1,86 @@
+//2. Design and implement C/C++ Program to find Minimum Cost Spanning Tree of a given connected undirected graph using Prim’s algorithm. 
+
+#include<stdio.h>          // Standard input/output header file 
+ 
+#define INF 999            // Define a large value to represent infinity (no edge) 
+ 
+// Function implementing Prim's Algorithm 
+int prim(int c[10][10], int n, int s) 
+{ 
+    int v[10];             // Array to mark visited vertices 
+    int i, j;              // Loop variables 
+    int sum = 0;           // Variable to store total cost of MST 
+    int ver[10];           // Array to store parent vertex of each node 
+    int d[10];             // Array to store minimum edge weight to each vertex 
+    int min;               // Variable to store minimum value 
+    int u;                 // Vertex selected with minimum distance 
+ 
+    // Initialize arrays 
+    for(i = 1; i <= n; i++) 
+    { 
+        ver[i] = s;        // Initially assume source is parent of all 
+        d[i] = c[s][i];    // Distance from source to each vertex 
+        v[i] = 0;          // Mark all vertices as unvisited 
+    } 
+ 
+    v[s] = 1;              // Mark source vertex as visited (included in MST) 
+ 
+    // Repeat n-1 times to select n-1 edges 
+    for(i = 1; i <= n-1; i++) 
+    { 
+        min = INF;         // Initialize minimum as infinity 
+ 
+        // Find vertex with minimum distance not yet visited 
+        for(j = 1; j <= n; j++) 
+            if(v[j] == 0 && d[j] < min) 
+            { 
+                min = d[j]; // Update minimum value 
+                u = j;      // Store vertex with minimum distance 
+            } 
+ 
+        v[u] = 1;          // Include selected vertex in MST 
+ 
+        sum = sum + d[u];  // Add selected edge weight to total cost 
+ 
+        // Print selected edge and running sum 
+        printf("\n%d -> %d sum=%d", ver[u], u, sum); 
+ 
+        // Update distances of adjacent vertices 
+        for(j = 1; j <= n; j++) 
+            if(v[j] == 0 && c[u][j] < d[j]) 
+            { 
+                d[j] = c[u][j];   // Update minimum distance 
+                ver[j] = u;       // Update parent 
+            } 
+    } 
+ 
+    return sum;            // Return total minimum cost 
+} 
+ 
+// Main function 
+void main() 
+{ 
+    int c[10][10];         // Cost adjacency matrix 
+    int i, j;              // Loop variables 
+    int res;               // Variable to store result (MST cost) 
+    int s;                 // Source vertex 
+    int n;                 // Number of vertices 
+ 
+    printf("\nEnter n value:"); 
+    scanf("%d", &n);       // Read number of vertices 
+ 
+    printf("\nEnter the graph data:\n"); 
+ 
+    // Read adjacency matrix 
+    for(i = 1; i <= n; i++) 
+        for(j = 1; j <= n; j++) 
+            scanf("%d", &c[i][j]); 
+ 
+    printf("\nEnter the source node:"); 
+    scanf("%d", &s);       // Read starting vertex 
+ 
+    res = prim(c, n, s);   // Call Prim’s function 
+ 
+    printf("\nCost=%d", res); // Print total MST cost 
+    //getch(); hi likhitha, this website doesnt understant getch as it isnt the turbo c software, so i have put getch(); in comments, but when you write the code, you need to mention getch(); <3        // Wait for key press (Turbo C specific) 
+} 
